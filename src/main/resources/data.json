@@ -1,0 +1,446 @@
+[
+  {
+    "name": "Bachelor of Agriculture (B.Sc. Agriculture)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Architecture (B.Arch)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Arts (BA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Ayurvedic Medicine & Surgery (BAMS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Business Administration (BBA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Commerce (B.Com)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Computer Applications (BCA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Dental Surgery (BDS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Design (B.Des)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Education (B.Ed)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Fine Arts (BFA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Homoeopathic Medicine and Surgery (BHMS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Laws (LLB)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Library Science (B.Lib.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Mass Communications (BMC)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Medicine and Bachelor of Surgery (MBBS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Nursing (Nursing)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Pharmacy (B.Pharmacy)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Physical Education (BPEd)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Physiotherapy (BPT)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Science (B.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Social Work (BSW)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Technology (B.Tech)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Bachelor of Veterinary Science & Animal Husbandry (B.V.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Doctor of Medicine (MD)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Doctor of Pharmacy (Pharm.D)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Doctor of Philosophy (PhD)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Doctorate of Medicine (DM)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Agriculture (M.Sc Agriculture)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Architecture (M.Arch)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Arts (MA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Business Administration (MBA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Chirurgiae (M.Ch)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Commerce (M.Com)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Computer Applications (MCA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Dental Surgery (MDS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Design (M.Design)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Education (M.Ed)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Fine Arts (MFA)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Laws (LLM)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Library Science (M.Lib.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Mass Communications / Mass Media (MMC / MMM)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Pharmacy (M.Pharm)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Philosophy (M.Phil)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Physical Education (Physical Education)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Physiotherapy (MPT)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Science (M.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Social Work / Master of Arts in Social Work (MSW / MA (SW))",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Surgery (MS)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Technology (M.Tech)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Master of Veterinary Science (M.V.Sc)",
+    "type": "College Books (Higher Education Textbooks)"
+  },
+  {
+    "name": "Arts, Design and Education Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Banking & Insurance Recruitment Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Civil Services Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Defence Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Engineering Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Exams by UPSC",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Finance & Accounting Entrance Exam",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Government Recruitment Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "IGNOU Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "International Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Interview Preparation",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Law/Legal Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Management Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Medical Entrance Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Polytechnics & ITI Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Professional Certification Exams",
+    "type": "Exam/Test Preparation Books"
+  },
+  {
+    "name": "Action & Adventure",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Arts, Film & Photography",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Biographies, Diaries & True Accounts",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Business & Economics",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Children & Young Adult",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Comics",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Computers & Internet",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Crafts, Hobbies & Home",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Crime, Thriller & Mystery",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Fiction",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Health, Family & Personal Development",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Health, Fitness & Nutrition",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Historical Fiction",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "History & Archaeology",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Humour",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Language, Linguistics & Writing",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Law",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Literature & Fiction",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Maps & Atlases",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Medicine and Health Sciences Textbooks",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Novels",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Philosophy, Religion & Spirituality",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Politics",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Reference",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Romance",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Science and Mathematics Textbooks",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Science Fiction & Fantasy",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Sciences, Technology & Medicine",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Society & Social Sciences",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Sports",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Textbooks & Study Guides",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "Travel & Tourism",
+    "type": "Reading Books (Novels, Children, Business, Literature, History, etc.)"
+  },
+  {
+    "name": "10th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "11th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "12th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "1st",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "2nd",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "3rd",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "4th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "5th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "6th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "7th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "8th",
+    "type": "School Books (up to 12th)"
+  },
+  {
+    "name": "9th",
+    "type": "School Books (up to 12th)"
+  }
+]
