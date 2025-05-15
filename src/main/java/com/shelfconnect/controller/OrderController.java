@@ -1,5 +1,6 @@
 package com.shelfconnect.controller;
 
+import com.shelfconnect.dto.OrderDTO;
 import com.shelfconnect.dto.api.APIResponse;
 import com.shelfconnect.dto.api.Status;
 import com.shelfconnect.dto.res.PageRes;
@@ -27,9 +28,17 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<APIResponse> sendOrder(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam("bookID") Long bookID
+            @RequestBody OrderDTO orderDTO
     ){
-
+        Order order = orderService.create(userDetails.getUser(),orderDTO);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .statusCode(HttpStatus.OK)
+                        .status(Status.SUCCESS)
+                        .message("order created")
+                        .data(OrderDTO.from(order))
+                        .build()
+        );
     }
 
     @GetMapping("/seller/")
