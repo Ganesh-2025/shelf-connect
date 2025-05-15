@@ -40,5 +40,5 @@ public class Order {
     @JoinColumn(name = "seller_id",columnDefinition = "check( buyer_id <> seller_id )")
     private User seller;
 
-    enum Status {ACCEPTED, DECLINED, PENDING, CANCELED}
+    public enum Status {ACCEPTED, DECLINED, PENDING, CANCELED}
 }
