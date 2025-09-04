@@ -1,6 +1,5 @@
 package com.shelfconnect.dto.req;
 
-import com.shelfconnect.dto.BookImageDTO;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
