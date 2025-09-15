@@ -1,5 +1,6 @@
 package com.shelfconnect.controller;
 
+import com.shelfconnect.dto.AddressDTO;
 import com.shelfconnect.dto.api.APIResponse;
 import com.shelfconnect.dto.api.Status;
 import com.shelfconnect.dto.req.BookReq;
@@ -12,6 +13,7 @@ import com.shelfconnect.service.impl.BookService;
 import com.shelfconnect.service.impl.ImageService;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,8 +37,20 @@ public class BookController {
         this.imageService = imageService;
     }
 
-    public List<?> getAllBooks() {
-        return null;
+    @GetMapping("/")
+    @ResponseBody
+    public ResponseEntity<APIResponse> getAllBooks(
+            Pageable pageable
+    ){
+        List<Book> books = bookService.getAllBooks(pageable);
+
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .statusCode(HttpStatus.OK)
+                        .status(Status.SUCCESS)
+                        .data(books)
+                        .build()
+        );
     }
     @GetMapping("/{id}")
     @ResponseBody

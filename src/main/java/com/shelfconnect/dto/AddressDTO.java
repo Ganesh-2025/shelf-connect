@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class AddressDTO {
@@ -35,5 +37,10 @@ public class AddressDTO {
                 .country(address.getCountry())
                 .pincode(address.getPincode())
                 .build();
+    }
+    public static List<AddressDTO> from(List<Address> addressList){
+        return addressList.stream()
+                .map(AddressDTO::from)
+                .toList();
     }
 }

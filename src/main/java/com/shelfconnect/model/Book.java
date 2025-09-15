@@ -1,10 +1,8 @@
 package com.shelfconnect.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +20,7 @@ public class Book {
     @Column(length = 13)
     private String isbn;
 
-    @Column(length = 50,nullable = false)
+    @Column(length = 50, nullable = false)
     private String title;
 
     @Column(length = 20)
@@ -31,18 +29,18 @@ public class Book {
     @Column(length = 30)
     private String publication;
 
-    @Column(precision = 8, scale = 2,nullable = false)
+    @Column(precision = 8, scale = 2, nullable = false)
     private BigDecimal actualPrice;
 
-    @Column(precision = 8, scale = 2,nullable = false)
+    @Column(precision = 8, scale = 2, nullable = false)
     private BigDecimal sellingPrice;
 
-    @Column(columnDefinition = "TEXT",nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Column(columnDefinition = "int check(quantity > 0)")
     private int quantity;
-    @Column(name = "`condition`",nullable = false)
+    @Column(name = "`condition`", nullable = false)
     private String condition;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -52,14 +50,21 @@ public class Book {
     )
     private List<Category> categories;
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id",nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.LAZY,orphanRemoval = true)
     private List<BookImage> images;
 
-    @ManyToOne()
-    @JoinColumn(name = "address_id",nullable = false)
-    private Address address;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "book_address",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private List<Address> addresses;
 }

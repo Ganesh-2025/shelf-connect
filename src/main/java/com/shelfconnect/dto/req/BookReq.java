@@ -33,9 +33,11 @@ public class BookReq {
     @NotNull
     private Long categoryId;
     @NotNull
-    private Long addressId;
-
-    private List<Long> imageIDs;
+    @Size(min = 1,message = "address required")
+    private List<@NotNull Long> addressIDs;
+    @NotNull
+    @Size(min = 1,message = "book image required")
+    private List<@NotNull  Long> imageIDs;
 
     @AssertTrue(message = "invalid condition ")
     public boolean isConditionValid() {

@@ -1,10 +1,8 @@
 package com.shelfconnect.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -19,6 +17,8 @@ public class BookImage {
     @MapsId
     @JoinColumn(name = "image_id")
     private Image image;
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "book_id")
     private Book book;

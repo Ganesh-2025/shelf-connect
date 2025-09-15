@@ -4,6 +4,7 @@ import com.shelfconnect.model.Image;
 import com.shelfconnect.repo.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,9 +22,10 @@ public class ImageService {
         this.cloudinaryService = cloudinaryService;
     }
 
+    @Transactional
     public Image create(MultipartFile file, String folder) throws IOException {
 
-//        upload/create image to cloudinary with public_id = filename and asset_folder = folder
+//        upload/placeOrder image to cloudinary with public_id = filename and asset_folder = folder
         Map<?, ?> data = cloudinaryService.upload(file, null, folder);
 //        save public_id,asset_id,url to Image and db
         Image image = Image.builder()
@@ -34,6 +36,7 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+    @Transactional
     public Image update(Long id, MultipartFile file, String folder) throws IOException {
         Image image = imageRepository.findById(id).orElseThrow();
         Map<?, ?> data = cloudinaryService.upload(file, image.getPublicId(), folder);
@@ -43,10 +46,11 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+    @Transactional
     public void delete(Long id) throws IOException {
         Image image = imageRepository.findById(id).orElseThrow();
         cloudinaryService.delete(image.getPublicId());
-        imageRepository.delete(image);
+        System.out.println("deleted " + image);
     }
 
     public Optional<Image> findById(Long imageId) {

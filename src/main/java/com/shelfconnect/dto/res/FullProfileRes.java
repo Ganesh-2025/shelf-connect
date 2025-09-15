@@ -28,12 +28,7 @@ public class FullProfileRes {
                 .avatar(user.getAvatar() != null ? user.getAvatar().getUrl() : null)
                 .isActive(user.isActive())
                 .isVerified(user.isVerified())
-                .addresses(
-                        user.getAddresses()
-                                .stream()
-                                .map(AddressDTO::from)
-                                .collect(Collectors.toList())
-                )
+                .addresses(AddressDTO.from(user.getAddresses()))
                 .role(user.getRole())
                 .build();
     }

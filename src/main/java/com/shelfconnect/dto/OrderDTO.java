@@ -1,5 +1,6 @@
 package com.shelfconnect.dto;
 
+import com.shelfconnect.model.Item;
 import com.shelfconnect.model.Order;
 import lombok.Builder;
 import lombok.Data;
@@ -10,23 +11,15 @@ import java.util.List;
 @Data
 @Builder
 public class OrderDTO {
-    private List<ItemDTO> items;
-    private BigDecimal actualAmount;
-    private BigDecimal totalAmount;
+    private Long id;
+    private ItemDTO item;
     private Order.Status status;
 
     public static OrderDTO from(Order order) {
         return OrderDTO.builder()
-                .actualAmount(order.getActualAmount())
-                .totalAmount(order.getTotalAmount())
+                .id(order.getId())
                 .status(order.getStatus())
-                .items(
-                        order
-                                .getItems()
-                                .stream()
-                                .map(ItemDTO::from)
-                                .toList()
-                )
+                .item(ItemDTO.from(order.getItem()))
                 .build();
     }
 }

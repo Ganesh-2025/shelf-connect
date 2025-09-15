@@ -13,7 +13,6 @@ public class ItemDTO {
     @NotNull
     private Long bookID;
     @Positive
-    @NotNull
     private int quantity;
     public static ItemDTO from(Item item){
         return ItemDTO.builder()

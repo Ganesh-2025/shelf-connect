@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @Builder
 public class SingleBookRes {
+    private Long id;
     private String title;
     private String isbn;
     private String description;
@@ -23,10 +24,11 @@ public class SingleBookRes {
     private BigDecimal sellingPrice;
     private int quantity;
     private List<String> images;
-    private AddressDTO addressDTO;
+    private List<AddressDTO> addressDTO;
 
     public static SingleBookRes from(Book book) {
         SingleBookRes singleBookRes =  SingleBookRes.builder()
+                .id(book.getId())
                 .title(book.getTitle())
                 .isbn(book.getIsbn())
                 .description(book.getDescription())
@@ -37,7 +39,7 @@ public class SingleBookRes {
                 .actualPrice(book.getActualPrice())
                 .sellingPrice(book.getSellingPrice())
                 .quantity(book.getQuantity())
-                .addressDTO(AddressDTO.from(book.getAddress()))
+                .addressDTO(AddressDTO.from(book.getAddresses()))
                 .build();
         if(book.getImages()!=null){
             singleBookRes.setImages(

@@ -32,7 +32,7 @@ public class Item {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne()
+    @OneToOne()
     @JoinColumn(name = "order_id")
     private Order order;
 }

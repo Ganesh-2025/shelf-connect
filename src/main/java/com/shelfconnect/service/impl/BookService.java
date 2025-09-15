@@ -1,5 +1,6 @@
 package com.shelfconnect.service.impl;
 
+import com.shelfconnect.Exception.APIException;
 import com.shelfconnect.dto.req.BookReq;
 import com.shelfconnect.model.*;
 import com.shelfconnect.repo.BookRepository;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,28 +86,25 @@ public class BookService implements IBookService {
     public Book addBook(BookReq book, Long ownerId) {
         User owner = userService.getUserById(ownerId).orElseThrow();
 //        SELECT ADDRESS FROM OWNER ADDRESSES OR ELSE THROW EXCEPTION
-        Address address = owner.getAddresses()
+        List<Address> addresses = owner.getAddresses()
                 .stream()
-                .filter(add -> add.getId().equals(book.getAddressId()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Address not Found"));
+                .filter((ownerAddress) ->
+                        book.getAddressIDs()
+                                .stream()
+                                .anyMatch(id -> ownerAddress.getId().equals(id))
+                )
+                .toList();
+        if (addresses.size() <= 0) throw new RuntimeException("Address not found");
 
 //        FIND CATEGORY BY ID OR ELSE THROW EXCEPTION
         Category category = categoryRepository
                 .findById(book.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("category not found"));
 
-        List<BookImage> images = book.getImageIDs().stream()
-                .map(id -> BookImage.builder()
-                        .image(imageService.findById(id).orElse(null))
-                        .build()
-                )
-                .collect(Collectors.toList());
-
-        if (!images.isEmpty())
-            images.get(0).setThumbnail(true);
 
 //        CREATE BOOK ENTITY AND SAVE IN DATABASE
+        List<BookImage> images = new ArrayList<>();
+
         Book newBook = Book.builder()
                 .condition(book.getCondition())
                 .title(book.getTitle())
@@ -118,13 +118,28 @@ public class BookService implements IBookService {
                 .description(book.getDescription())
                 .categories(List.of(category))
                 .images(images)
-                .address(address)
+                .addresses(addresses)
                 .owner(owner)
                 .build();
 
+                book.getImageIDs().stream()
+                .map(newId -> {
+                            var image = imageService.findById(newId).orElseThrow(() -> new APIException(HttpStatus.BAD_REQUEST, "Image not Found"));
+                            return BookImage
+                                    .builder()
+                                    .image(image)
+                                    .book(newBook)
+                                    .build();
+                        }
+                )
+                .forEach(images::add);
+        if (images.isEmpty()) throw new APIException(HttpStatus.BAD_REQUEST, "image required");
+        images.get(0).setThumbnail(true);
+
         return bookRepository.save(newBook);
     }
-@Transactional()
+
+    @Transactional()
     public Book update(BookReq book, Long ownerID) {
 
         User owner = userService
@@ -146,68 +161,77 @@ public class BookService implements IBookService {
         bookToUpdate.setQuantity(book.getQuantity());
         bookToUpdate.setCondition(book.getCondition());
 
-        Category category = categoryRepository.getReferenceById(book.getCategoryId());
-        bookToUpdate.setCategories(List.of(category));
-
+        bookToUpdate.getAddresses().clear();
+        Map<Long, Address> ownerAddresses = owner.getAddresses()
+                .stream()
+                .collect(Collectors.toMap(Address::getId, address -> address));
+        book.getAddressIDs()
+                .stream()
+                .filter(ownerAddresses::containsKey)
+                .map(ownerAddresses::get)
+                .forEach(address -> bookToUpdate.getAddresses().add(address));
+//        bookToUpdate.setAddresses(new ArrayList<>(updatedAddresses));
+        if (bookToUpdate.getCategories().get(0).equals(book.getCategoryId())) {
+            Category category = categoryRepository.findById(book.getCategoryId()).orElseThrow(() -> new APIException(HttpStatus.BAD_REQUEST, "Category not Found."));
+            bookToUpdate.getCategories().clear();
+            bookToUpdate.getCategories().add(category);
+        }
         List<BookImage> images = bookToUpdate.getImages();
-
+        System.out.println(images);
         List<BookImage> newImages = book.getImageIDs()
                 .stream()
                 .filter(id ->
                         images
                                 .stream()
-                                .noneMatch(bookImage -> bookImage.getImage().getId().equals(id))
+                                .noneMatch(bookImage -> bookImage.getImageId().equals(id))
                 )
-                .map(newId -> BookImage
-                        .builder()
-                        .image(imageService.findById(newId).orElse(null))
-                        .build()
+                .map(newId -> {
+                            var image = imageService.findById(newId).orElseThrow(() -> new APIException(HttpStatus.BAD_REQUEST, "Image not Found"));
+                            return BookImage
+                                    .builder()
+                                    .image(image)
+                                    .book(bookToUpdate)
+                                    .build();
+                        }
                 )
-                .filter(bookImage -> bookImage.getImage() != null)
                 .toList();
 
-        List<Image> imagesToDestroy = images
+        List<BookImage> imagesToDestroy = images
                 .stream()
                 .filter(image -> book.getImageIDs()
                         .stream()
-                        .anyMatch(id -> image.getImageId().equals(id))
+                        .noneMatch(id -> image.getImageId().equals(id))
                 )
-                .map(bookImage -> {
-                    images.remove(bookImage);
-                    return bookImage.getImage();
-                })
                 .toList();
-
-        List<BookImage> updatedImages = new ArrayList<>(images);
-        updatedImages.addAll(newImages);
-
-        if(!book.getImageIDs().isEmpty()){
-            Long id = book.getImageIDs().get(0);
-            updatedImages.stream()
-                    .peek(bookImage -> bookImage.setThumbnail(false))
-                    .filter(bookImage -> bookImage.getImageId().equals(id))
-                    .findFirst()
-                    .ifPresent(bookImage -> bookImage.setThumbnail(true));
+        for (BookImage bookImage : imagesToDestroy) {
+            images.remove(bookImage);
         }
+        images.addAll(newImages);
 
-        bookToUpdate.setImages(updatedImages);
+        Long id = book.getImageIDs().get(0);
+        for (BookImage image : images) {
+            image.setThumbnail(false);
+            if (image.getImage().getId().equals(id))
+                image.setThumbnail(true);
+        }
 
         Book updatedBook = bookRepository.save(bookToUpdate);
         imagesToDestroy.forEach(image -> {
             try {
-                imageService.delete(image.getId());
+                imageService.delete(image.getImage().getId());
             } catch (IOException e) {
                 throw new RuntimeException("unable to destroy image");
             }
         });
         return updatedBook;
     }
+
     @Transactional
-    public void delete(Long id,User owner){
+    public void delete(Long id, User owner) {
         Book book = owner.getBooks().stream()
-                    .filter(b->b.getId().equals(id))
-                    .findFirst()
-                    .orElseThrow(()->new RuntimeException("book not found"));
+                .filter(b -> b.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("book not found"));
         book.getImages()
                 .forEach(bookImage -> {
                     try {
@@ -219,7 +243,7 @@ public class BookService implements IBookService {
         bookRepository.delete(book);
     }
 
-    public Optional<Book> getBookByID(Long id){
+    public Optional<Book> getBookByID(Long id) {
         return bookRepository.findById(id);
     }
 }

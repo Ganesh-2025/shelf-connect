@@ -20,24 +20,21 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(precision = 8, scale = 2)
-    private BigDecimal totalAmount;
-
-    @Column(precision = 8, scale = 2)
-    private BigDecimal actualAmount;
-
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items;
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Item> items;
+
+    @OneToOne(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", columnDefinition = "check( buyer_id <> seller_id )")
     private User buyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id",columnDefinition = "check( buyer_id <> seller_id )")
+    @JoinColumn(name = "seller_id", columnDefinition = "check( buyer_id <> seller_id )")
     private User seller;
 
     public enum Status {ACCEPTED, DECLINED, PENDING, CANCELED}

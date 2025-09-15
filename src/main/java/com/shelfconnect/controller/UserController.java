@@ -1,6 +1,7 @@
 package com.shelfconnect.controller;
 
 import com.shelfconnect.Exception.APIException;
+import com.shelfconnect.dto.SharedContactDetailsDTO;
 import com.shelfconnect.dto.api.APIResponse;
 import com.shelfconnect.dto.api.Status;
 import com.shelfconnect.dto.req.UpdatePasswordReq;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -144,7 +146,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetails authUser,
             @Valid @NotNull @RequestBody UpdatePasswordReq updatePasswordReq
     ) {
-        System.out.println(updatePasswordReq);
+
         boolean isUpdated = userService.updatePassword(
                 authUser.getUser().getId(),
                 updatePasswordReq.getOldPassword(),
@@ -179,11 +181,12 @@ public class UserController {
     @GetMapping("/my-books")
     @ResponseBody
     public ResponseEntity<APIResponse> myBooks(
-            @AuthenticationPrincipal UserDetails authUser
+            @AuthenticationPrincipal UserDetails authUser,
+            Pageable pageable
     ) {
         Book bookExample = Book.builder().owner(authUser.getUser()).build();
         Page<Book> books = bookService
-                .getAllBooks(Pageable.ofSize(10), Example.of(bookExample));
+                .getAllBooks(pageable, Example.of(bookExample));
         return ResponseEntity.ok().body(
                 APIResponse.builder()
                         .statusCode(HttpStatus.OK)
@@ -191,6 +194,41 @@ public class UserController {
                         .data(AllBooksRes.from(books))
                         .build()
         );
+    }
+
+    @GetMapping("/contacts/my-shared-contacts")
+    @ResponseBody
+    public ResponseEntity<APIResponse> getAllSharedContacts(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Pageable pageable
+    ){
+        Page<SharedContactDetailsDTO> page = userService.getMySharedContactDetails(userDetails.getUser(),pageable);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .status(Status.SUCCESS)
+                        .statusCode(HttpStatus.OK)
+                        .message("your shared contact details")
+                        .data(Map.of("sharedContacts",page))
+                        .build()
+        );
+
+    }
+    @GetMapping("/contacts/sent-requests")
+    @ResponseBody
+    public ResponseEntity<APIResponse> getAllSharedContactRequests(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Pageable pageable
+    ){
+        Page<SharedContactDetailsDTO> page = userService.getSentSharedContactDetailRequests(userDetails.getUser(),pageable);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .status(Status.SUCCESS)
+                        .statusCode(HttpStatus.OK)
+                        .message("your shared contact details")
+                        .data(Map.of("sharedContacts",page))
+                        .build()
+        );
+
     }
 
 //    @PutMapping("/address")

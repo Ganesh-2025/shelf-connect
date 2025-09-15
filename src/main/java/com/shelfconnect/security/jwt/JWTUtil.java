@@ -21,7 +21,7 @@ public class JWTUtil {
     private Duration JWT_EXPIRATION;
 
     public String generateTokenFromUsername(String username) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION.toMillis()))

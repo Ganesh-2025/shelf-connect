@@ -3,6 +3,7 @@ package com.shelfconnect.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DialectOverride;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +54,21 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "owner",
             fetch = FetchType.LAZY
     )
-    @ToString.Exclude
     private List<Book> books;
+    @OneToOne(mappedBy = "buyer",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "from",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<SharedContactDetails> sharedContactDetails;
+
+    @OneToMany(mappedBy = "to",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<SharedContactDetails> requestedSharedContactDetails;
 
     public enum Role {USER, ADMIN}
 

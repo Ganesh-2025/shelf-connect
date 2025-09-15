@@ -4,6 +4,7 @@ import com.shelfconnect.Exception.APIException;
 import com.shelfconnect.dto.api.APIResponse;
 import com.shelfconnect.dto.api.Status;
 import com.shelfconnect.model.Image;
+import com.shelfconnect.repo.ImageRepository;
 import com.shelfconnect.service.impl.ImageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,13 @@ import java.util.Map;
 @RestController()
 @RequestMapping("/api/image")
 public class ImageController {
+    private final ImageRepository imageRepository;
+
     private enum FOLDERS {book,user};
     private final ImageService imageService;
-    public ImageController(ImageService imageService) {
+    public ImageController(ImageService imageService, ImageRepository imageRepository) {
         this.imageService = imageService;
+        this.imageRepository = imageRepository;
     }
 
     @PostMapping(value = "/upload",consumes = "multipart/form-data")
@@ -42,6 +46,13 @@ public class ImageController {
             e.printStackTrace();
             throw new APIException("error occured while uploading image", HttpStatus.INTERNAL_SERVER_ERROR,null);
         }
+    }
+    @GetMapping("/")
+    @ResponseBody
+    public String delete(){
+        Image image = imageRepository.getReferenceById(6L);
+        imageRepository.delete(image);
+        return "ok";
     }
 
 }

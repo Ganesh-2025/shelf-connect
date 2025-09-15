@@ -1,13 +1,22 @@
 package com.shelfconnect.service.impl;
 
+import com.shelfconnect.Exception.APIException;
 import com.shelfconnect.Exception.AppException;
+import com.shelfconnect.dto.SharedContactDetailsDTO;
 import com.shelfconnect.dto.req.UpdateProfileReq;
+import com.shelfconnect.dto.res.PageRes;
 import com.shelfconnect.model.Address;
 import com.shelfconnect.model.Image;
+import com.shelfconnect.model.SharedContactDetails;
 import com.shelfconnect.model.User;
+import com.shelfconnect.repo.SharedContactDetailsRepository;
 import com.shelfconnect.repo.UserRepository;
 import com.shelfconnect.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +33,14 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final SharedContactDetailsRepository sharedContactDetailsRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, SharedContactDetailsRepository sharedContactDetailsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
+        this.sharedContactDetailsRepository = sharedContactDetailsRepository;
     }
 
     @Override
@@ -131,4 +142,57 @@ public class UserService implements IUserService {
         user.setAvatar(null);
         userRepository.save(user);
     }
+
+    public Page<SharedContactDetailsDTO> getMySharedContactDetails(User user, Pageable pageable) {
+        var details = user.getSharedContactDetails();
+        return PageRes.from(details,pageable,SharedContactDetailsDTO::from);
+    }
+
+    public Page<SharedContactDetailsDTO> getSentSharedContactDetailRequests(User user, Pageable pageable) {
+        var details = user.getRequestedSharedContactDetails();
+        return PageRes.from(details,pageable,SharedContactDetailsDTO::from);
+    }
+
+    public void createShareContactDetailsRequest(User to, Long fromID) {
+        User from = this.getUserById(fromID).orElseThrow(() -> new APIException(HttpStatus.BAD_REQUEST, "user not found"));
+        SharedContactDetails sharedContactDetails = SharedContactDetails.builder()
+                .from(from)
+                .to(to)
+                .status(SharedContactDetails.Status.PENDING)
+                .build();
+        to.getRequestedSharedContactDetails().add(sharedContactDetails);
+        saveUser(to);
+    }
+
+    public List<SharedContactDetails> updateSharedContactDetails(User from , Long toID, SharedContactDetails.Status status,String contactDetails){
+        if(contactDetails!=null&&contactDetails!=""){
+            status = SharedContactDetails.Status.ACCEPTED;
+        }
+       SharedContactDetails sharedContactDetails = from.getSharedContactDetails()
+                .stream()
+                .filter(details->details.getTo().getId().equals(toID))
+                .findFirst()
+                .orElseThrow(()->new APIException(HttpStatus.BAD_REQUEST,"User not found"));
+        sharedContactDetails.setStatus(status);
+        sharedContactDetails.setDetails(contactDetails);
+        return this.saveUser(from).getSharedContactDetails();
+    }
+    public List<SharedContactDetails> deniedSharedContactDetailsRequest(User from , Long toID){
+        return this.updateSharedContactDetails(from,toID, SharedContactDetails.Status.DENIED,null);
+    }
+    public void deleteSharedContactDetailsRequest(User to,Long fromID){
+        SharedContactDetails sharedContactDetails = to.getRequestedSharedContactDetails()
+                .stream()
+                .filter(contactDetails->contactDetails.getFrom().getId().equals(fromID))
+                .findFirst()
+                .orElseThrow(()->new APIException(HttpStatus.BAD_REQUEST,"User not found"));
+        to.getRequestedSharedContactDetails().remove(sharedContactDetails);
+        saveUser(to);
+    }
+
+    public User saveUser(User user){
+        return userRepository.save(user);
+    }
+
+
 }
