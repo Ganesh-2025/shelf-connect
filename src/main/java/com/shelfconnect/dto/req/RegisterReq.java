@@ -29,8 +29,6 @@ public class RegisterReq {
     @Size(min = 8, max = 30, message = "invalid size")
     private final String confirmPassword;
 
-    private final User.Role role;
-
     @AssertTrue(message = "Passwords do not match")
     private boolean isPasswordConfirmed() {
         return password != null && password.equals(confirmPassword);

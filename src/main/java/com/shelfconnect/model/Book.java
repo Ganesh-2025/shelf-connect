@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -67,4 +68,5 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
     private List<Address> addresses;
+    private Timestamp createdAt;
 }

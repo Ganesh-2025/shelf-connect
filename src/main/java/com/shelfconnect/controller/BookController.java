@@ -1,6 +1,5 @@
 package com.shelfconnect.controller;
 
-import com.shelfconnect.dto.AddressDTO;
 import com.shelfconnect.dto.api.APIResponse;
 import com.shelfconnect.dto.api.Status;
 import com.shelfconnect.dto.req.BookReq;
@@ -11,9 +10,10 @@ import com.shelfconnect.repo.CategoryRepository;
 import com.shelfconnect.security.user.UserDetails;
 import com.shelfconnect.service.impl.BookService;
 import com.shelfconnect.service.impl.ImageService;
+import com.shelfconnect.util.BookReqParamParser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,9 +40,32 @@ public class BookController {
     @GetMapping("/")
     @ResponseBody
     public ResponseEntity<APIResponse> getAllBooks(
-            Pageable pageable
-    ){
-        List<Book> books = bookService.getAllBooks(pageable);
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam(value = "isbn", required = false) String isbn,
+            @RequestParam(value = "category", required = false) String category,   // e.g. "5,6"
+            @RequestParam(value = "maxPrice", required = false) String maxPrice,
+            @RequestParam(value = "condition", required = false) String condition,
+            @RequestParam(value = "inStock", required = false) String inStock,     // "true"/"false"
+            @RequestParam(value = "nearby", required = false) String nearby,       // "lat,lng,radiusKm"
+            @RequestParam(value = "sort", required = false) String sort,           // "price,asc"
+            @RequestParam(value = "page", required = false) String page,
+            @RequestParam(value = "size", required = false) String size
+    ) {
+        BookReqParamParser.ParamReq paramReq = BookReqParamParser.parse(
+                title,
+                author,
+                isbn,
+                category,
+                maxPrice,
+                condition,
+                inStock,
+                nearby,
+                sort,
+                page,
+                size
+        );
+        Page<Book> books = bookService.getAllBooks(paramReq);
 
         return ResponseEntity.ok(
                 APIResponse.builder()
@@ -52,19 +75,20 @@ public class BookController {
                         .build()
         );
     }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<APIResponse> bookById(
             @PathVariable Long id
-    ){
+    ) {
         Book book = bookService.getBookByID(id)
-                .orElseThrow(()->new RuntimeException("book not found"));
+                .orElseThrow(() -> new RuntimeException("book not found"));
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .statusCode(HttpStatus.OK)
                         .status(Status.SUCCESS)
                         .message("book found")
-                        .data(Map.of("book",book))
+                        .data(Map.of("book", book))
                         .build()
         );
     }
@@ -91,14 +115,14 @@ public class BookController {
     public ResponseEntity<APIResponse> updateBook(
             @AuthenticationPrincipal UserDetails authUser,
             @Valid @RequestBody BookReq book
-    ){
-        Book updatedBook = bookService.update(book,authUser.getUser().getId());
+    ) {
+        Book updatedBook = bookService.update(book, authUser.getUser().getId());
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .statusCode(HttpStatus.OK)
                         .status(Status.SUCCESS)
                         .message("book updated successfully")
-                        .data(Map.of("book",updatedBook))
+                        .data(Map.of("book", updatedBook))
                         .build()
         );
     }
@@ -108,8 +132,8 @@ public class BookController {
     public ResponseEntity<APIResponse> deleteBook(
             @AuthenticationPrincipal UserDetails authUser,
             @PathVariable("id") Long book_id
-    ){
-        bookService.delete(book_id,authUser.getUser());
+    ) {
+        bookService.delete(book_id, authUser.getUser());
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .status(Status.SUCCESS)

@@ -1,5 +1,6 @@
 package com.shelfconnect.dto.req;
 
+import com.shelfconnect.constant.AppConstants;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -9,7 +10,6 @@ import java.util.List;
 
 @Data
 public class BookReq {
-    private static final String[] conditions = {"EXCELLENT", "GOOD", "AVERAGE", "BELOW AVERAGE", "POOR"};
     private Long id;
     @NotBlank
     @Size(max = 50)
@@ -41,7 +41,7 @@ public class BookReq {
 
     @AssertTrue(message = "invalid condition ")
     public boolean isConditionValid() {
-        return condition != null && Arrays.stream(conditions).anyMatch(condition -> condition.equals(this.condition));
+        return condition != null && Arrays.stream(AppConstants.bookConditions).anyMatch(condition -> condition.equals(this.condition));
     }
 
 }

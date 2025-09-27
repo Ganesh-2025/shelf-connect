@@ -10,6 +10,7 @@ public class SharedContactDetailsDTO {
     private Long id;
     private Long fromID;
     private Long toID;
+    private SharedContactDetails.Status status;
     private String details;
 
     public static SharedContactDetailsDTO from(SharedContactDetails sharedContactDetails){
@@ -17,6 +18,7 @@ public class SharedContactDetailsDTO {
                 .id(sharedContactDetails.getID())
                 .fromID(sharedContactDetails.getFrom().getId())
                 .toID(sharedContactDetails.getTo().getId())
+                .status(sharedContactDetails.getStatus())
                 .details(sharedContactDetails.getDetails())
                 .build();
     }

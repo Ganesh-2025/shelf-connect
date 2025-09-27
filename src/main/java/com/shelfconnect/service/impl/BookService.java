@@ -6,20 +6,21 @@ import com.shelfconnect.model.*;
 import com.shelfconnect.repo.BookRepository;
 import com.shelfconnect.repo.CategoryRepository;
 import com.shelfconnect.repo.UserRepository;
+import com.shelfconnect.repo.specification.BookSpecifications;
 import com.shelfconnect.service.IBookService;
+import com.shelfconnect.util.BookReqParamParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,22 +29,20 @@ public class BookService implements IBookService {
     private final CategoryRepository categoryRepository;
     private final ImageService imageService;
     private final BookRepository bookRepository;
+    private final BookSpecifications specifications;
 
     @Autowired
-    public BookService(BookRepository bookRepository, UserRepository userRepository, UserService userService, CategoryRepository categoryRepository, ImageService imageService) {
+    public BookService(BookRepository bookRepository, UserRepository userRepository, UserService userService, CategoryRepository categoryRepository, ImageService imageService, BookSpecifications specifications) {
         this.bookRepository = bookRepository;
         this.userService = userService;
         this.categoryRepository = categoryRepository;
         this.imageService = imageService;
+        this.specifications = specifications;
     }
 
-    @Override
-    public List<Book> getAllBooks(Pageable pageable) {
-        return bookRepository.findAll(pageable).toList();
-    }
 
     @Override
-    public List<Book> getAllBooks(
+    public Page<Book> getAllBooks(
             Pageable pageable,
             User owner
     ) {
@@ -52,11 +51,32 @@ public class BookService implements IBookService {
 
     @Override
     public Page<Book> getAllBooks(
-            Pageable pageable,
-            Example<Book> bookExample
+            BookReqParamParser.ParamReq paramReq
     ) {
-        return bookRepository.findAll(bookExample, pageable);
-//        return bookRepository.findAll(pageable).toList();
+        int maxPageSize = 50;
+        int pageNumber = Math.max(paramReq.page(), 0);
+        int pageSize = paramReq.size() > 0 ? Math.min(paramReq.size(), maxPageSize) : 10;
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                paramReq.sort() != null ? paramReq.sort() : Sort.unsorted()
+        );
+
+        List<Specification<Book>> specs = new ArrayList<>();
+        if (paramReq.title() != null) specs.add(specifications.title(paramReq.title()));
+        if (paramReq.author() != null) specs.add(specifications.author(paramReq.author()));
+        if (paramReq.isbn() != null) specs.add(specifications.isbn(paramReq.isbn()));
+        if (paramReq.categories() != null) specs.add(specifications.categories(paramReq.categories()));
+        if (paramReq.maxPrice() != null) specs.add(specifications.maxPrice(paramReq.maxPrice()));
+        if (paramReq.condition() != null) specs.add(specifications.condition(paramReq.condition()));
+        specs.add(specifications.inStock(paramReq.inStock()));
+        if (paramReq.nearby() != null) specs.add(specifications.nearBy(paramReq.nearby()));
+        Specification<Book> specification = specs.stream()
+                .filter(Objects::nonNull)
+                .reduce(Specification::and)
+                .orElse(null);
+
+        return bookRepository.findAll(specification, pageable);
     }
 
 
@@ -122,7 +142,7 @@ public class BookService implements IBookService {
                 .owner(owner)
                 .build();
 
-                book.getImageIDs().stream()
+        book.getImageIDs().stream()
                 .map(newId -> {
                             var image = imageService.findById(newId).orElseThrow(() -> new APIException(HttpStatus.BAD_REQUEST, "Image not Found"));
                             return BookImage

@@ -6,7 +6,9 @@ public interface URL {
     AntPathRequestMatcher[] PUBLIC = {
             new AntPathRequestMatcher("/api/auth/**"),
             new AntPathRequestMatcher("/api/book/book-categories/**","GET"),
-            new AntPathRequestMatcher("/api/book/**","GET")
+            new AntPathRequestMatcher("/api/book/**","GET"),
+            new AntPathRequestMatcher("/swagger-ui/**"),
+            new AntPathRequestMatcher("/v3/api-docs/**"),
     };
     AntPathRequestMatcher[] USER = {
             new AntPathRequestMatcher("/api/user/**"),

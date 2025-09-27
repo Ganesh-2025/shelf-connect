@@ -164,22 +164,25 @@ public class UserService implements IUserService {
         saveUser(to);
     }
 
-    public List<SharedContactDetails> updateSharedContactDetails(User from , Long toID, SharedContactDetails.Status status,String contactDetails){
+    public SharedContactDetails updateSharedContactDetails(User from , SharedContactDetailsDTO sharedContactDetailsDTO){
+        var id = sharedContactDetailsDTO.getId();
+        var status = sharedContactDetailsDTO.getStatus();
+        var contactDetails = sharedContactDetailsDTO.getDetails();
+
         if(contactDetails!=null&&contactDetails!=""){
             status = SharedContactDetails.Status.ACCEPTED;
         }
        SharedContactDetails sharedContactDetails = from.getSharedContactDetails()
                 .stream()
-                .filter(details->details.getTo().getId().equals(toID))
+                .filter(details->details.getID().equals(id))
                 .findFirst()
                 .orElseThrow(()->new APIException(HttpStatus.BAD_REQUEST,"User not found"));
         sharedContactDetails.setStatus(status);
         sharedContactDetails.setDetails(contactDetails);
-        return this.saveUser(from).getSharedContactDetails();
+        this.saveUser(from);
+        return sharedContactDetails;
     }
-    public List<SharedContactDetails> deniedSharedContactDetailsRequest(User from , Long toID){
-        return this.updateSharedContactDetails(from,toID, SharedContactDetails.Status.DENIED,null);
-    }
+
     public void deleteSharedContactDetailsRequest(User to,Long fromID){
         SharedContactDetails sharedContactDetails = to.getRequestedSharedContactDetails()
                 .stream()

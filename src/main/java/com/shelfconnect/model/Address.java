@@ -3,6 +3,7 @@ package com.shelfconnect.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.geo.Point;
 
 @Data
 @Builder
@@ -24,6 +25,8 @@ public class Address {
     private String country;
     @Column(length = 6, columnDefinition = "char(6)",nullable = false)
     private String pincode;
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
+    private Point location;
     @ToString.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)

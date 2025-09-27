@@ -10,16 +10,17 @@ import com.shelfconnect.dto.res.AllBooksRes;
 import com.shelfconnect.dto.res.FullProfileRes;
 import com.shelfconnect.dto.res.UserInfoRes;
 import com.shelfconnect.model.Book;
+import com.shelfconnect.model.SharedContactDetails;
 import com.shelfconnect.model.User;
 import com.shelfconnect.security.user.UserDetails;
 import com.shelfconnect.service.impl.BookService;
 import com.shelfconnect.service.impl.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 
-/*
- *  -- PROFILE RELATED --
- * 1. update profile
- * 2. update password
- * 3. view my books
- * 4. view my orders
- * 5. view my selling orders
- * 6. history
- * */
+
 @RestController
 @RequestMapping("/api/user")
 @Validated
@@ -184,9 +177,8 @@ public class UserController {
             @AuthenticationPrincipal UserDetails authUser,
             Pageable pageable
     ) {
-        Book bookExample = Book.builder().owner(authUser.getUser()).build();
         Page<Book> books = bookService
-                .getAllBooks(pageable, Example.of(bookExample));
+                .getAllBooks(pageable,authUser.getUser());
         return ResponseEntity.ok().body(
                 APIResponse.builder()
                         .statusCode(HttpStatus.OK)
@@ -201,36 +193,70 @@ public class UserController {
     public ResponseEntity<APIResponse> getAllSharedContacts(
             @AuthenticationPrincipal UserDetails userDetails,
             Pageable pageable
-    ){
-        Page<SharedContactDetailsDTO> page = userService.getMySharedContactDetails(userDetails.getUser(),pageable);
+    ) {
+        Page<SharedContactDetailsDTO> page = userService.getMySharedContactDetails(userDetails.getUser(), pageable);
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .status(Status.SUCCESS)
                         .statusCode(HttpStatus.OK)
                         .message("your shared contact details")
-                        .data(Map.of("sharedContacts",page))
+                        .data(Map.of("sharedContacts", page))
                         .build()
         );
 
     }
+
     @GetMapping("/contacts/sent-requests")
     @ResponseBody
     public ResponseEntity<APIResponse> getAllSharedContactRequests(
             @AuthenticationPrincipal UserDetails userDetails,
             Pageable pageable
-    ){
-        Page<SharedContactDetailsDTO> page = userService.getSentSharedContactDetailRequests(userDetails.getUser(),pageable);
+    ) {
+        Page<SharedContactDetailsDTO> page = userService.getSentSharedContactDetailRequests(userDetails.getUser(), pageable);
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .status(Status.SUCCESS)
                         .statusCode(HttpStatus.OK)
                         .message("your shared contact details")
-                        .data(Map.of("sharedContacts",page))
+                        .data(Map.of("sharedContacts", page))
                         .build()
         );
 
     }
 
+    @PutMapping("/contacts/update")
+    public ResponseEntity<APIResponse> updateSharedContactDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            SharedContactDetailsDTO sharedContactDetailsDTO
+    ) {
+        SharedContactDetails sharedContactDetails = userService.updateSharedContactDetails(userDetails.getUser(), sharedContactDetailsDTO);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .statusCode(HttpStatus.OK)
+                        .status(Status.SUCCESS)
+                        .message("contct updated")
+                        .data(Map.of("sharedContacts", SharedContactDetailsDTO.from(sharedContactDetails)))
+                        .build()
+        );
+
+    }
+
+    @DeleteMapping("/contacts/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<APIResponse> deleteSharedContactDetailRequest(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathParam("id")Long id
+            ) {
+        userService.deleteSharedContactDetailsRequest(userDetails.getUser(),id);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .statusCode(HttpStatus.OK)
+                        .status(Status.SUCCESS)
+                        .message("request deleted")
+                        .build()
+        );
+
+    }
 //    @PutMapping("/address")
 //    @ResponseBody
 //    public ResponseEntity<APIResponse> saveAddresses(

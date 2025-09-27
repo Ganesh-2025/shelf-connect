@@ -61,7 +61,8 @@ public class User {
             fetch = FetchType.LAZY
     )
     private List<Book> books;
-    @OneToOne(mappedBy = "buyer",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
     private Cart cart;
 
     @OneToMany(mappedBy = "from",cascade = CascadeType.ALL,orphanRemoval = true)
